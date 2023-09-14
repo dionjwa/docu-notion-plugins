@@ -12,7 +12,7 @@ async function notionColumnListToMarkdown(
   ): Promise<string> {
     const n2m = context.notionToMarkdown;
     const mdBlocks_temp = await n2m.pageToMarkdown(block.id);
-      let finalMdString = `\n<div class="row">\n`;
+      let finalMdString = `\n<div className="custom-docunotion-row">\n`;
       for (const one_block of mdBlocks_temp) {
         const blockChildren = await context.getBlockChildren((one_block as any).blockId);
 
@@ -36,7 +36,7 @@ async function notionColumnListToMarkdown(
           : "\n<br/>";
           }
         }
-        finalMdString += `  <div class="row-cell">\n\n${htmlString}\n  </div>\n`;
+        finalMdString += `  <div className="custom-docunotion-row-cell">\n\n${htmlString}\n  </div>\n`;
       }
       return finalMdString + "</div>\n\n";
   }

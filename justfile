@@ -66,7 +66,7 @@ publish: _require_NPM_TOKEN _build
 
 
 _build:
-    {{tsc}} --noEmit
+    {{tsc}}
 
 _install +args="":
     pnpm i {{args}}
