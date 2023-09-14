@@ -25,7 +25,7 @@ export function correctNotionUrlsInMermaid(args?: { slugPrefix?: string }): IPlu
             context: IDocuNotionContext,
             block: NotionBlock
           ) => {
-            const slugPrefix = slugPrefixFromArgs || context.options.markdownOutputPath.split("/").pop();
+            const slugPrefix = slugPrefixFromArgs !== undefined ? slugPrefixFromArgs : context.options.markdownOutputPath.split("/").pop();
             const codeBlock = block as CodeBlockObjectResponse;
             let text: string = codeBlock.code.rich_text[0].plain_text;
             let language: string = codeBlock.code.language;
