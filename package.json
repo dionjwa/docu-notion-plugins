@@ -4,10 +4,9 @@
     "type": "git",
     "url": "https://github.com/dionjwa/docu-notion-plugins"
   },
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "scripts": {
-    "publish": "just publish",
     "typecheck": "tsc"
   },
   "dependencies": {
