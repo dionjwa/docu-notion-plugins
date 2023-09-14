@@ -28,22 +28,21 @@ _help:
     echo ""
     just --list --unsorted --list-heading $'📚 Commands:\n'
 
-test: _ensure_npm_modules
-    {{tsc}} --noEmit
+test: _ensure_npm_modules _build
 
 # If the npm version does not exist, publish the module
-_npm_publish: _require_NPM_TOKEN _build
+publish: _require_NPM_TOKEN _build
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ "$CI" != "true" ]; then
-        # This check is here to prevent publishing if there are uncommitted changes, but this check does not work in CI environments
-        # because it starts as a clean checkout and git is not installed and it is not a full checkout, just the tip
-        if [[ $(git status --short) != '' ]]; then
-            git status
-            echo -e '💥 Cannot publish with uncommitted changes'
-            exit 2
-        fi
-    fi
+    # if [ "$CI" != "true" ]; then
+    #     # This check is here to prevent publishing if there are uncommitted changes, but this check does not work in CI environments
+    #     # because it starts as a clean checkout and git is not installed and it is not a full checkout, just the tip
+    #     if [[ $(git status --short) != '' ]]; then
+    #         git status
+    #         echo -e '💥 Cannot publish with uncommitted changes'
+    #         exit 2
+    #     fi
+    # fi
 
     PACKAGE_EXISTS=true
     if npm search $(cat package.json | jq -r .name) | grep -q  "No matches found"; then
@@ -67,7 +66,7 @@ _npm_publish: _require_NPM_TOKEN _build
 
 
 _build:
-    pnpm run build
+    {{tsc}} --noEmit
 
 _install +args="":
     pnpm i {{args}}

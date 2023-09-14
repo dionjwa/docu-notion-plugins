@@ -5,9 +5,9 @@
     "url": "https://github.com/dionjwa/docu-notion-plugins"
   },
   "version": "0.0.1",
-  "private": true,
+  "private": false,
   "scripts": {
-    "publish": "docusaurus start",
+    "publish": "just publish",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -27,5 +27,11 @@
   },
   "engines": {
     "node": ">=16.14"
-  }
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js"
 }
