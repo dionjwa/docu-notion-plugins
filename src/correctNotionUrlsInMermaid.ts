@@ -16,7 +16,7 @@ import {
 export function correctNotionUrlsInMermaid(args?: { slugPrefix?: string }): IPlugin {
     const { slugPrefix:slugPrefixFromArgs } = args || {};
     return {
-      name: "correctNotionUrlsInMermaidAlsoCoffeescriptToJsxLive",
+      name: "correctNotionUrlsInMermaid",
   
       notionToMarkdownTransforms: [
         {
@@ -100,7 +100,7 @@ const transformMermaidLinks = (
   // https://mermaid.js.org/syntax/flowchart.html#interaction
   // NB this processing is just for internal link navigation
   const linkRegExp =
-    /\s*click\s+([A-za-z][A-za-z0-9_-]*)\s+"?(https:\/\/www\.notion\.so\/\S*)?"/g;
+    /\s*click\s+([A-za-z][A-za-z0-9_-]*)\s+"?(https:\/\/www\.notion\.so\/\S*)"/g;
   let output = pageMarkdown;
   let match: RegExpExecArray | null;
 
