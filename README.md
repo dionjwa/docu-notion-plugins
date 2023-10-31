@@ -21,6 +21,7 @@ import {
   correctNotionUrlsInMermaid,
   modifiedStandardInternalLinkConversion,
   notionColumnsUpgraded,
+  embedToIframe,
 } from '@dionjw/docu-notion-plugins';
 
 const config: IDocuNotionConfig = {
@@ -28,6 +29,9 @@ const config: IDocuNotionConfig = {
     notionColumnsUpgraded,
     correctNotionUrlsInMermaid(),
     modifiedStandardInternalLinkConversion,
+    // Convert all [embed] markdown tags to <iframes>, with
+    // special treatment for metaframes/metapages
+    embedToIframe,
   ],
 };
 export default config;
