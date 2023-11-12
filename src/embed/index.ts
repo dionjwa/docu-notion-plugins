@@ -52,7 +52,7 @@ export const embedToIframe: IPlugin = {
                 // We can get better layout info
                 const gridlayout = possibleMetapageDefinition?.meta?.layouts?.["react-grid-layout"];
                 if (gridlayout) {
-                    const rowHeight :number = gridlayout?.rowHeight || 100;
+                    const rowHeight :number = gridlayout?.props?.rowHeight || 100;
                     const maxHeightBlocks = gridlayout?.layout.reduce((acc :number, cur :{h:number, y:number}) => {
                         return Math.max(acc, cur.h + cur.y);
                     }, 1);
