@@ -1,5 +1,4 @@
 import {
-  blobToBase64String,
   getHashParamValueJson,
   setHashValueInUrl,
 } from '@metapages/hash-query';
@@ -53,18 +52,17 @@ export const embedToIframe: IPlugin = {
                 const gridlayout = possibleMetapageDefinition?.meta?.layouts?.["react-grid-layout"];
                 if (gridlayout) {
                     const rowHeight :number = gridlayout?.props?.rowHeight || 100;
+                    const margin :number = gridlayout?.props?.margin?.[1] || 20;
                     const maxHeightBlocks = gridlayout?.layout.reduce((acc :number, cur :{h:number, y:number}) => {
                         return Math.max(acc, cur.h + cur.y);
                     }, 1);
-                    const height = maxHeightBlocks * rowHeight;
+                    const headerHeight = 40; // Copied from metapage.io code, how to get this in here?
+                    const height = (maxHeightBlocks * rowHeight) + (margin * maxHeightBlocks - 1) + headerHeight;
                     iframeHeight = height;
                 }
-
-                const newMetapageUrl = `https://app.metapages.org/#?definition=${blobToBase64String(possibleMetapageDefinition)}&hide-header=true`;
-                url.href = newMetapageUrl;
             }
             // fudge
-            iframeHeight += 150; // for the header plus padding, currently not part of the compute
+            iframeHeight += 70; // for the header plus padding, currently not part of the compute
         }
 
         // Check for redirects
