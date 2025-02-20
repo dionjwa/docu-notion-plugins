@@ -64,32 +64,30 @@ class Renderer extends Marked.Renderer {
     super();
     this.customOptions = customOptions;
   }
-  code(code: string, lang = "") {
+  code({ text, lang, escaped }: Marked.Tokens.Code): string {
     const { codeClass } = this.customOptions;
+    lang = lang ?? "plaintext";
     const customClass = codeClass ? ` class="${codeClass}"` : "";
     if (!Object.hasOwnProperty.call(Prismjs.languages, lang)) {
-      return `<pre${customClass}><code>${He.escape(code)}</code></pre$>`;
+      return `<pre${customClass}><code>${He.escape(text)}</code></pre$>`;
     }
-    const html = Prismjs.highlight(code, Prismjs.languages[lang], lang);
+    const html = Prismjs.highlight(text, Prismjs.languages[lang], lang);
     return `<pre class="highlight language-${lang}"${customClass}>${html}</pre>`;
   }
   
-  heading(
-    text: string,
-    level: 1 | 2 | 3 | 4 | 5 | 6,
-    raw: string,
-    
-    slugger: Marked.Slugger
-  ) {
-    const slug = slugger.slug(raw);
+  heading({ tokens, depth }: Marked.Tokens.Heading) {
+    const text = tokens.map(t => t.raw).join('');
+    const raw = tokens.map(t => t.raw).join('');
+    const slug = ""//this.slugger.slug(raw);
     const { anchorElement, headingClass } = this.customOptions;
     const customClass = headingClass ? ` class="${headingClass}"` : "";
     if (!anchorElement) {
-      return `<h${level} id="${slug}"${customClass}>${text}</h${level}>`;
+      return `<h${depth} id="${slug}"${customClass}>${text}</h${depth}>`;
     }
-    return `<h${level} id="${slug}"${customClass}><a class="anchor" aria-hidden="true" tabindex="-1" href="#${slug}">${anchorElement}</a>${text}</h${level}>`;
+    return `<h${depth} id="${slug}"${customClass}><a class="anchor" aria-hidden="true" tabindex="-1" href="#${slug}">${anchorElement}</a>${text}</h${depth}>`;
   }
-  link(href: string, title: string, text: string) {
+  link({ href, title, tokens }: Marked.Tokens.Link) {
+    const text = tokens.map(t => t.raw).join('');
     const { linkClass } = this.customOptions;
     const customClass = linkClass ? ` class="${linkClass}"` : "";
     if (href.startsWith("#")) {
@@ -110,7 +108,7 @@ export interface Options
   allowedClasses?: { [key: string]: string[] };
   disableDefaults?: boolean;
 }
-export function renderMarkdown(markdown: string, options: Options = {}) {
+export async function renderMarkdown(markdown: string, options: Options = {}) {
   const {
     gfm = true,
     allowedTags = [],
@@ -118,7 +116,7 @@ export function renderMarkdown(markdown: string, options: Options = {}) {
     allowedClasses = {},
     ...rest
   } = options;
-  const htmlString = Marked.marked(markdown, {
+  const htmlString = await Marked.marked(markdown, {
     renderer: new Renderer(options.render),
     gfm,
   });

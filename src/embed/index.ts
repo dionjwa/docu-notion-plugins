@@ -1,6 +1,5 @@
 import {
-  getHashParamValueJson,
-  setHashValueInUrl,
+  getHashParamValueJsonFromUrl,
 } from '@metapages/hash-query';
 import { MetapageDefinitionV3 } from '@metapages/metapage';
 import {
@@ -32,7 +31,7 @@ export const embedToIframe: IPlugin = {
         let iframeHeight = 300;
         if (url.hostname.includes("metapage")) {
             // We can get more info
-            possibleMetapageDefinition = getHashParamValueJson(urlString, "definition");
+            possibleMetapageDefinition = getHashParamValueJsonFromUrl(urlString, "definition");
             
             if (!possibleMetapageDefinition) {
                 // We can get more info
@@ -78,12 +77,7 @@ export const embedToIframe: IPlugin = {
             // ignored
         }
 
-        // put js metaframes in edit mode
-        if (url.hostname === "js.mtfm.io") {
-            url.href = setHashValueInUrl(url.href, "edit", "1");
-        }
-
-        return `\n<iframe scrolling="no" allow="fullscreen *; camera *; speaker *;" style={{width:"100%",height:"${iframeHeight}px",overflow:"hidden"}} src="${url.href}"></iframe>\n`
+        return `\n<iframe scrolling="yes" allow="fullscreen *; camera *; speaker *;" style={{width:"100%",height:"${iframeHeight}px",overflow:"hidden"}} src="${url.href}"></iframe>\n`
       },
     },
   ],

@@ -28,7 +28,7 @@ async function notionColumnListToMarkdown(
           } else {
             // @ts-ignore
             htmlString += mdString?.parent
-          ? renderMarkdown(
+          ? await renderMarkdown(
               // @ts-ignore
               mdString?.parent as string,
               markdownToHtmlRenderOptions
