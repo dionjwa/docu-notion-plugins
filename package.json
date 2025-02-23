@@ -4,15 +4,15 @@
     "type": "git",
     "url": "https://github.com/dionjwa/docu-notion-plugins"
   },
-  "version": "0.1.9",
+  "version": "0.1.11",
   "publishConfig": {
     "access": "public"
   },
+  "type": "module",
   "scripts": {
     "typecheck": "tsc"
   },
   "dependencies": {
-    
     "he": "^1.2.0",
     "marked": "^15.0.7",
     "prismjs": "^1.29.0",
@@ -28,8 +28,8 @@
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "@metapages/metapage": "1",
-    "@metapages/hash-query": "0.8"
+    "@metapages/metapage": "1.x",
+    "@metapages/hash-query": "0.8.x"
   },
   "engines": {
     "node": ">=20"
