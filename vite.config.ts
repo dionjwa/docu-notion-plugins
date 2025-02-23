@@ -21,38 +21,34 @@ export default defineConfig(({ mode }) => ({
 
   build: {
     outDir: "./dist",
-    target: "modules",
+    target: "esnext",
     emptyOutDir: true,
     sourcemap: true,
     minify: mode === "development" ? false : "esbuild",
     reportCompressedSize: true,
     lib: {
-      entry: {
-        'index': path.resolve(__dirname, 'src/index.ts'),
-      },
-      formats: ['es']
-
-      // entry: path.resolve(__dirname, "src/index.ts"),
-      // formats: ["es"],
-      // fileName: (format) => `index.${format === 'es' ? 'js' : format}`,
+      entry: 'src/index.ts',
+      formats: ['es'],
+      fileName: 'index'
     },
+    modulePreload: true,
     rollupOptions: {
+      external: [
+        "@metapages/metapage",
+        "@metapages/hash-query",
+        'tslib',
+        'node-fetch',
+      ],
       output: {
+        format: 'es',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
-        // Make sure to keep separate files for imports
-        // entryFileNames: '[name].js',
-        // chunkFileNames: '[name]-[hash].js',
-        // assetFileNames: '[name]-[hash][extname]',
-        // Provide global variables to use in the UMD build
-        // for externalized deps
         globals: {
           react: "React"
-        }
+        },
+        preserveModules: true,
+        exports: 'named'
       },
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: ["@metapages/metapage", "@metapages/hash-query"],
       plugins: [
         typescriptPaths({
           preserveExtensions: true,

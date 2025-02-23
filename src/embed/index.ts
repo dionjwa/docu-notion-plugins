@@ -7,7 +7,7 @@ import {
   IPlugin,
 } from '@sillsdev/docu-notion';
 
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 export const embedToIframe: IPlugin = {
   name: "embed-to-iframe",

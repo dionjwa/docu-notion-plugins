@@ -1,4 +1,4 @@
-import { join } from 'path';
+import * as path from 'path';
 
 import {
   CodeBlockObjectResponse,
@@ -77,7 +77,7 @@ const convertHref = (args: {
     if (slugPrefix) {
       convertedLink =
         (slugPrefix.startsWith("/") ? "" : "/") +
-        join(slugPrefix, convertedLink);
+        path.join(slugPrefix, convertedLink);
     }
 
     Log.verbose(`Converting Link ${url} --> ${convertedLink}`);
