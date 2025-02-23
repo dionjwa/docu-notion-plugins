@@ -38,7 +38,7 @@ async function notionColumnListToMarkdown(
         }
         finalMdString += `  <div className="custom-docunotion-row-cell">\n\n${htmlString}\n  </div>\n`;
       }
-      return finalMdString + "</div>\n\n";
+      return finalMdString + "\n</div>\n\n";
   }
 
 export const notionColumnsUpgraded: IPlugin = {

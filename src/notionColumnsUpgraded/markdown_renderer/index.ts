@@ -82,18 +82,18 @@ class Renderer extends Marked.Renderer {
     const { anchorElement, headingClass } = this.customOptions;
     const customClass = headingClass ? ` class="${headingClass}"` : "";
     if (!anchorElement) {
-      return `<h${depth} id="${slug}"${customClass}>${text}</h${depth}>`;
+      return `<h${depth} id="${slug}"${customClass}>${text}</h${depth}>\n`;
     }
-    return `<h${depth} id="${slug}"${customClass}><a class="anchor" aria-hidden="true" tabindex="-1" href="#${slug}">${anchorElement}</a>${text}</h${depth}>`;
+    return `<h${depth} id="${slug}"${customClass}>\n<a class="anchor" aria-hidden="true" tabindex="-1" href="#${slug}">${anchorElement}</a>\n${text}\n</h${depth}>\n`;
   }
   link({ href, title, tokens }: Marked.Tokens.Link) {
     const text = tokens.map(t => t.raw).join('');
     const { linkClass } = this.customOptions;
     const customClass = linkClass ? ` class="${linkClass}"` : "";
     if (href.startsWith("#")) {
-      return `<a href="${href}"${customClass}>${text}</a>`;
+      return `\n<a href="${href}"${customClass}>${text}</a>\n`;
     }
-    return `<a href="${href}" title="${title}" rel="noopener noreferrer"${customClass}>${text}</a>`;
+    return `\n<a href="${href}" title="${title}" rel="noopener noreferrer"${customClass}>${text}</a>\n`;
   }
 }
 export interface Options
