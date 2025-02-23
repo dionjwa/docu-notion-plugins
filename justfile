@@ -9,6 +9,7 @@ set export                          := true
 # The NPM_TOKEN is required for publishing to https://www.npmjs.com
 NPM_TOKEN                          := env_var_or_default("NPM_TOKEN", "")
 tsc                                := "./node_modules/typescript/bin/tsc"
+vite                               := "NODE_OPTIONS='--max_old_space_size=16384' ./node_modules/vite/bin/vite.js"
 ###########################################################################
 # Formatting
 ###########################################################################
@@ -65,8 +66,15 @@ publish: _require_NPM_TOKEN _build
     npm publish --access public .
 
 
-_build:
-    {{tsc}}
+@_build:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # Compiles the entire codebase to typescript files in ./dist.
+    # How to test installation of the build?
+    {{tsc}} --noEmit
+    echo "✅ typescript check"
+    {{vite}} build
+    echo "✅ vite build"
 
 _install +args="":
     pnpm i {{args}}
