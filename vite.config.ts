@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => ({
 
   build: {
     outDir: "./dist",
-    target: "esnext",
+    target: "modules",
     emptyOutDir: true,
     sourcemap: true,
     minify: mode === "development" ? false : "esbuild",
@@ -29,7 +29,6 @@ export default defineConfig(({ mode }) => ({
     lib: {
       entry: 'src/index.ts',
       formats: ['es'],
-      fileName: 'index'
     },
     modulePreload: true,
     rollupOptions: {
@@ -43,11 +42,8 @@ export default defineConfig(({ mode }) => ({
         format: 'es',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
-        globals: {
-          react: "React"
-        },
-        preserveModules: true,
-        exports: 'named'
+        // preserveModules: true,
+        // exports: 'named'
       },
       plugins: [
         typescriptPaths({
