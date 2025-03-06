@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import {
   CodeBlockObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
@@ -9,6 +7,14 @@ import {
   Log,
   NotionBlock,
 } from '@sillsdev/docu-notion';
+
+// Helper function to join URL paths properly
+function joinPaths(...parts: string[]): string {
+  return parts
+    .map(part => part.replace(/^\/+|\/+$/g, '')) // Remove leading/trailing slashes
+    .filter(part => part.length > 0)             // Remove empty parts
+    .join('/');                                  // Join with a single slash
+}
 
 // The mermaid interactive click syntax:
 // https://mermaid.js.org/syntax/flowchart.html#interaction
@@ -75,9 +81,10 @@ const convertHref = (args: {
     // console.log("convertedLink", convertedLink);
 
     if (slugPrefix) {
-      convertedLink =
-        (slugPrefix.startsWith("/") ? "" : "/") +
-        path.join(slugPrefix, convertedLink);
+      // Ensure the path starts with a slash if needed
+      convertedLink = '/' + joinPaths(slugPrefix, convertedLink);
+      // Remove duplicate leading slash if slugPrefix already had one
+      convertedLink = convertedLink.replace(/^\/+/, '/');
     }
 
     Log.verbose(`Converting Link ${url} --> ${convertedLink}`);

@@ -5,11 +5,10 @@
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
-    // vite recommends this
     "isolatedModules": true,
-    "lib": ["ES2021"],
-    "module": "esnext",
-    "moduleResolution": "node",
+    "lib": ["ES2021", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -26,8 +25,9 @@
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,
-    "target": "es2020",
+    "target": "ES2020",
     "typeRoots": ["./node_modules/@types", "./src/notionColumnsUpgraded/markdown_renderer/deps.ts"],
+    "types": ["node"]
   },
   "exclude": ["node_modules", "dist"],
   "include": ["./src/*"]

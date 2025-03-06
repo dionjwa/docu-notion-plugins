@@ -1,7 +1,6 @@
 import path, { resolve } from 'path';
 import { typescriptPaths } from 'rollup-plugin-typescript-paths';
 import { defineConfig } from 'vite';
-
 import typescript from '@rollup/plugin-typescript';
 
 // https://vitejs.dev/config/
@@ -21,7 +20,7 @@ export default defineConfig(({ mode }) => ({
 
   build: {
     outDir: "./dist",
-    target: "modules",
+    target: "esnext",
     emptyOutDir: true,
     sourcemap: true,
     minify: mode === "development" ? false : "esbuild",
@@ -29,21 +28,20 @@ export default defineConfig(({ mode }) => ({
     lib: {
       entry: 'src/index.ts',
       formats: ['es'],
+      fileName: () => 'index.js',
     },
     modulePreload: true,
     rollupOptions: {
       external: [
         "@metapages/metapage",
         "@metapages/hash-query",
+        "@sillsdev/docu-notion",
         'tslib',
         'node-fetch',
       ],
       output: {
-        format: 'es',
-        entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
-        // preserveModules: true,
-        // exports: 'named'
+        preserveModules: true,
       },
       plugins: [
         typescriptPaths({

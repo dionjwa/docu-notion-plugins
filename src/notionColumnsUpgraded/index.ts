@@ -2,44 +2,58 @@ import {
   IDocuNotionContext,
   IPlugin,
   NotionBlock,
-} from '@sillsdev/docu-notion';
+} from "@sillsdev/docu-notion";
 
-import { renderMarkdown } from './markdown_renderer';
+import { renderMarkdown } from "./markdown_renderer";
 
 async function notionColumnListToMarkdown(
-    context: IDocuNotionContext,
-    block: NotionBlock
-  ): Promise<string> {
-    const n2m = context.notionToMarkdown;
-    const mdBlocks_temp = await n2m.pageToMarkdown(block.id);
-      let finalMdString = `\n<div className="custom-docunotion-row">\n`;
-      for (const one_block of mdBlocks_temp) {
-        const blockChildren = await context.getBlockChildren((one_block as any).blockId);
+  context: IDocuNotionContext,
+  block: NotionBlock
+): Promise<string> {
+  const n2m = context.notionToMarkdown;
+  const mdBlocks_temp = await n2m.pageToMarkdown(block.id);
+  let finalMdString = `\n<div className="custom-docunotion-row">\n`;
+  for (const one_block of mdBlocks_temp) {
+    const blockChildren = await context.getBlockChildren(
+      (one_block as any).blockId
+    );
 
-        let htmlString :string = "";
+    let htmlString: string = "";
 
-        for (const blockChild of blockChildren) {
-          const blockMarkdown = await n2m.blocksToMarkdown([blockChild]);
-          const mdString = n2m.toMarkdownString(blockMarkdown);
-          // @ts-ignore
-          if (mdString?.parent?.startsWith("\n```")) {
-            // @ts-ignore
-            htmlString += "\n\n" + mdString.parent + "\n\n";
-          } else {
-            // @ts-ignore
-            htmlString += mdString?.parent
+    for (const blockChild of blockChildren) {
+      const blockMarkdown = await n2m.blocksToMarkdown([blockChild]);
+      const mdString = n2m.toMarkdownString(blockMarkdown);
+
+      // console.log(`START [blockChild]=${JSON.stringify(blockChild)}`);
+      // console.log(`blockMarkdown=${JSON.stringify(blockMarkdown)}`);
+      // console.log(`mdString=${JSON.stringify(mdString)  }`);
+      // console.log(`mdString.parent=${mdString.parent}`);
+      // console.log(`END`)
+      
+      // @ts-ignore
+      if (mdString?.parent?.startsWith("\n```")) {
+        // @ts-ignore
+        htmlString += "\n\n" + mdString.parent + "\n\n";
+      } else {
+        // @ts-ignore
+        htmlString += mdString?.parent
           ? await renderMarkdown(
               // @ts-ignore
               mdString?.parent as string,
               markdownToHtmlRenderOptions
             )
           : "\n<br/>";
-          }
-        }
-        finalMdString += `  <div className="custom-docunotion-row-cell">\n\n${htmlString}\n  </div>\n`;
       }
-      return finalMdString + "\n</div>\n\n";
+    }
+
+    if (htmlString.trim().startsWith("<p>")) {
+      htmlString = htmlString.trim().replace("<p>", "").replace("</p>", "");
+    }
+
+    finalMdString += `  <div className="custom-docunotion-row-cell">\n\n${htmlString}\n  </div>\n`;
   }
+  return finalMdString + "\n</div>\n\n";
+}
 
 export const notionColumnsUpgraded: IPlugin = {
   name: "notionColumnsUpgraded",
@@ -48,32 +62,30 @@ export const notionColumnsUpgraded: IPlugin = {
     {
       type: "column_list",
       getStringFromBlock: (context, block) =>
-      notionColumnListToMarkdown(
-          context,
-          block
-        ),
+        notionColumnListToMarkdown(context, block),
     },
     // Force notion-to-md default column rendering (not docu-notion's default)
     {
-        type: "column",
-        // @ts-ignore
-        getStringFromBlock: async (context, block) => {
-          return false;
-        }
+      type: "column",
+      // @ts-ignore
+      getStringFromBlock: async (context, block) => {
+        return false;
+      },
     },
   ],
   regexMarkdownModifications: [
     // replace image links with require() statements for docusaurus
     {
-        regex: /"(https?:\/\/www\.|https?:\/\/)?(\.\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?(\/[a-zA-Z0-9]{2,})?"/,
-        getReplacement: async (
-            context: IDocuNotionContext,
-            match: RegExpExecArray
-          ): Promise<string> => {
-            const url = match[0];
-            return `{require(${url}).default}`;
-          }
-    }
+      regex:
+        /"(https?:\/\/www\.|https?:\/\/)?(\.\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?(\/[a-zA-Z0-9]{2,})?"/,
+      getReplacement: async (
+        context: IDocuNotionContext,
+        match: RegExpExecArray
+      ): Promise<string> => {
+        const url = match[0];
+        return `{require(${url}).default}`;
+      },
+    },
   ],
 };
 
